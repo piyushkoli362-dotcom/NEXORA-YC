@@ -1,0 +1,11 @@
+node_modules
+.next
+.env
+.env.*
+!.env.example
+.venv
+.local
+.git
+*.db
+__pycache__
+test-results

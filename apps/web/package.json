@@ -1,0 +1,32 @@
+{
+  "name": "@nexora/web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --hostname 127.0.0.1",
+    "build": "next build",
+    "start": "next start --hostname 0.0.0.0",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "next": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "@tanstack/react-query": "latest",
+    "zustand": "latest",
+    "lucide-react": "latest",
+    "@radix-ui/react-slot": "latest",
+    "@radix-ui/react-dialog": "latest",
+    "class-variance-authority": "latest",
+    "clsx": "latest",
+    "tailwind-merge": "latest"
+  },
+  "devDependencies": {
+    "typescript": "latest",
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "tailwindcss": "latest",
+    "@tailwindcss/postcss": "latest"
+  }
+}

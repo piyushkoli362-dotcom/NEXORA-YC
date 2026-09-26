@@ -1,0 +1,70 @@
+name: Nexora checks
+on: [push, pull_request]
+jobs:
+  api:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: nexora
+          POSTGRES_PASSWORD: ci-only-password
+          POSTGRES_DB: nexora_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U nexora -d nexora_test"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      APP_ENV: test
+      DATABASE_URL: postgresql+psycopg://nexora:ci-only-password@localhost:5432/nexora_test
+      TEST_DATABASE_URL: postgresql+psycopg://nexora:ci-only-password@localhost:5432/nexora_test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r apps/api/requirements.lock.txt
+      - run: python -m alembic -c apps/api/alembic.ini upgrade head
+      - run: python -m pytest tests -q
+  web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npm audit --omit=dev --audit-level=high
+  e2e:
+    runs-on: ubuntu-latest
+    env:
+      APP_ENV: development
+      SEED_ADMIN_EMAIL: admin@demo.nexora.example.com
+      SEED_ADMIN_PASSWORD: ephemeral-ci-admin-passphrase-987
+      SEED_FOUNDER_PASSWORD: ephemeral-ci-founder-passphrase-987
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: npm ci && pip install -r apps/api/requirements.lock.txt
+      - run: npx playwright install --with-deps chromium
+      - run: python -m alembic -c apps/api/alembic.ini upgrade head
+      - run: PYTHONPATH=apps/api python -m app.seed
+      - run: npm run build
+      - name: Critical browser flows
+        run: |
+          PYTHONPATH=apps/api uvicorn app.main:app --host 127.0.0.1 --port 8000 --no-proxy-headers &
+          npm run start -w apps/web &
+          npx wait-on http://localhost:3000 http://127.0.0.1:8000/api/v1/health
+          npm run test:e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: browser-test-results
+          path: test-results/

@@ -1,0 +1,2 @@
+# API contracts
+`openapi.json` is generated from FastAPI's Pydantic contracts with `python scripts/export_openapi.py`. Input models reject unknown fields. User, startup, public-startup and application responses use explicit output allowlists. The TypeScript fetch boundary is in apps/web/lib/api.ts. Regenerate the schema after contract changes; future clients can generate types directly from this document.
