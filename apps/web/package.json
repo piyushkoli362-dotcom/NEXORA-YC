@@ -9,24 +9,24 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "next": "latest",
-    "react": "latest",
-    "react-dom": "latest",
-    "@tanstack/react-query": "latest",
-    "zustand": "latest",
-    "lucide-react": "latest",
-    "@radix-ui/react-slot": "latest",
-    "@radix-ui/react-dialog": "latest",
-    "class-variance-authority": "latest",
-    "clsx": "latest",
-    "tailwind-merge": "latest"
+    "@radix-ui/react-dialog": "*",
+    "@radix-ui/react-slot": "*",
+    "@tanstack/react-query": "*",
+    "class-variance-authority": "*",
+    "clsx": "*",
+    "lucide-react": "*",
+    "next": "^16.4.2",
+    "react": "*",
+    "react-dom": "*",
+    "tailwind-merge": "*",
+    "zustand": "*"
   },
   "devDependencies": {
-    "typescript": "latest",
-    "@types/node": "latest",
-    "@types/react": "latest",
-    "@types/react-dom": "latest",
-    "tailwindcss": "latest",
-    "@tailwindcss/postcss": "latest"
+    "@tailwindcss/postcss": "*",
+    "@types/node": "*",
+    "@types/react": "*",
+    "@types/react-dom": "*",
+    "tailwindcss": "*",
+    "typescript": "*"
   }
 }
